@@ -61,7 +61,7 @@ namespace HMS.Service.Services.Implementations
                 throw new PageIndexFormException($"PageIndex must be greater or equal than 1");
 
             IEnumerable<RoomType> roomTypes = await _unitOfWork.RoomTypeRepository
-                .GetAllPagenatedAsync(page, 5, x => !x.IsDeleted && string.IsNullOrWhiteSpace(search) ? true : x.Name.ToLower().Contains(search));
+                .GetAllPagenatedAsync(page, 5, x => !x.IsDeleted && string.IsNullOrWhiteSpace(search) ? true : (x.Name.ToLower().Contains(search) && !x.IsDeleted));
             int totalCount = await _unitOfWork.RoomTypeRepository
                 .GetTotalCountAsync(x => !x.IsDeleted && string.IsNullOrWhiteSpace(search) ? true : x.Name.ToLower().Contains(search));
 
