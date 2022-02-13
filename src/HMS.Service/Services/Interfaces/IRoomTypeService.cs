@@ -12,9 +12,10 @@ namespace HMS.Service.Services.Interfaces
     {
         Task CreateAsync(RoomTypePostDto roomTypeDto);
         Task<RoomTypeDetailDto> GetByIdAsync(int id);
-        Task<PagenatedListDto<RoomTypeListItemDto>> GetAllFiltered(int page, string search);
+        Task<PagenatedListDto<RoomTypeListItemDto>> GetAllFiltered(int page, string search = null);
         Task EditAsync(int id, RoomTypePostDto roomTypeDto);
         void Delete(int id);
+        Task SoftDeleteByIdAsync(int id);
         Task<bool> IsExistsByIdAsync(int id);
     }
 }

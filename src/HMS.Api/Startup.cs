@@ -1,5 +1,6 @@
 using AutoMapper;
 using FluentValidation.AspNetCore;
+using HMS.Api.ServiceExtensions;
 using HMS.Core;
 using HMS.Data;
 using HMS.Service.DTOs.RoomTypeDtos;
@@ -68,6 +69,8 @@ namespace HMS.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HMS.Api v1"));
             }
+
+            app.AddExceptionHandlerService();
 
             app.UseHttpsRedirection();
 

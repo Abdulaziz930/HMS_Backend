@@ -3,6 +3,7 @@ using HMS.Core;
 using HMS.Core.Entities;
 using HMS.Service.DTOs;
 using HMS.Service.DTOs.RoomTypeDtos;
+using HMS.Service.Exceptions;
 using HMS.Service.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,9 @@ namespace HMS.Service.Services.Implementations
 
         public async Task CreateAsync(RoomTypePostDto roomTypeDto)
         {
+            if (await _unitOfWork.RoomTypeRepository.IsExistsAsync(x => x.Name.ToLower() == roomTypeDto.Name.ToLower()))
+                throw new RecordAlredyExistException($"Item already exist with name {roomTypeDto.Name}");
+
             RoomType roomType = _mapper.Map<RoomType>(roomTypeDto);
 
             await _unitOfWork.RoomTypeRepository.InsertAsync(roomType);
@@ -33,30 +37,66 @@ namespace HMS.Service.Services.Implementations
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            _unitOfWork.RoomTypeRepository.Remove(new RoomType { Id = id });
         }
 
-        public Task EditAsync(int id, RoomTypePostDto roomTypeDto)
+        public async Task EditAsync(int id, RoomTypePostDto roomTypeDto)
         {
-            throw new NotImplementedException();
+            RoomType roomType = await _unitOfWork.RoomTypeRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
+            if (roomType is null)
+                throw new ItemNotFoundException($"Item not found by id: {id}");
+
+            if (await _unitOfWork.RoomTypeRepository.IsExistsAsync(x => x.Id != id && x.Name.ToLower() == roomType.Name.ToLower()))
+                throw new RecordAlredyExistException($"Item already exist with name {roomTypeDto.Name}");
+
+            roomType.Name = roomTypeDto.Name;
+            roomType.UpdatedAt = DateTime.UtcNow;
+
+            await _unitOfWork.CommitAsync();
         }
 
-        public Task<PagenatedListDto<RoomTypeListItemDto>> GetAllFiltered(int page, string search)
+        public async Task<PagenatedListDto<RoomTypeListItemDto>> GetAllFiltered(int page, string search = null)
         {
-            throw new NotImplementedException();
+            if (page < 0)
+                throw new PageIndexFormException($"PageIndex must be greater or equal than 1");
+
+            IEnumerable<RoomType> roomTypes = await _unitOfWork.RoomTypeRepository
+                .GetAllPagenatedAsync(page, 5, x => !x.IsDeleted && string.IsNullOrWhiteSpace(search) ? true : x.Name.ToLower().Contains(search));
+            int totalCount = await _unitOfWork.RoomTypeRepository
+                .GetTotalCountAsync(x => !x.IsDeleted && string.IsNullOrWhiteSpace(search) ? true : x.Name.ToLower().Contains(search));
+
+            IEnumerable<RoomTypeListItemDto> roomTypeDtos = _mapper.Map<IEnumerable<RoomTypeListItemDto>>(roomTypes);
+
+            PagenatedListDto<RoomTypeListItemDto> pagenatedListDto = new PagenatedListDto<RoomTypeListItemDto>(roomTypeDtos, totalCount, page, 5);
+
+            return pagenatedListDto;
         }
 
         public async Task<RoomTypeDetailDto> GetByIdAsync(int id)
         {
             RoomType roomType = await _unitOfWork.RoomTypeRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
+            if (roomType == null)
+                throw new ItemNotFoundException($"Item not found by id: {id}");
+
             RoomTypeDetailDto roomTypeDto = _mapper.Map<RoomTypeDetailDto>(roomType);
 
             return roomTypeDto;
         }
 
-        public Task<bool> IsExistsByIdAsync(int id)
+        public async Task<bool> IsExistsByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _unitOfWork.RoomTypeRepository.IsExistsAsync(x => x.Id == id && !x.IsDeleted);
+        }
+
+        public async Task SoftDeleteByIdAsync(int id)
+        {
+            RoomType roomType = await _unitOfWork.RoomTypeRepository.GetAsync(x => x.Id == id && !x.IsDeleted);
+            if (roomType is null)
+                throw new ItemNotFoundException($"Item not found by id: {id}");
+
+            roomType.IsDeleted = true;
+
+            await _unitOfWork.CommitAsync();
         }
     }
 }

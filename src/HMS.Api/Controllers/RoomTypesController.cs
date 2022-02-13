@@ -1,4 +1,5 @@
-﻿using HMS.Service.DTOs.RoomTypeDtos;
+﻿using HMS.Service.DTOs;
+using HMS.Service.DTOs.RoomTypeDtos;
 using HMS.Service.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,15 +26,38 @@ namespace HMS.Api.Controllers
         {
             await _roomTypeService.CreateAsync(roomTypeDto);
 
-            return StatusCode(StatusCodes.Status201Created);
+            return StatusCode(StatusCodes.Status201Created
+                , new ResponeDto { Status = StatusCodes.Status201Created, Message = "Room type succefuly created" });
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var roomType = await _roomTypeService.GetByIdAsync(id);
+            return Ok(await _roomTypeService.GetByIdAsync(id));
+        }
 
-            return StatusCode(StatusCodes.Status200OK, roomType);
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, RoomTypePostDto roomTypeDto)
+        {
+            await _roomTypeService.EditAsync(id, roomTypeDto);
+
+            return StatusCode(StatusCodes.Status204NoContent);
+        }
+
+        [HttpGet("")]
+        public async Task<IActionResult> GetAll(string search = null, int page = 1)
+        {
+            var roomTypes = await _roomTypeService.GetAllFiltered(page, search);
+
+            return StatusCode(StatusCodes.Status200OK, roomTypes);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _roomTypeService.SoftDeleteByIdAsync(id);
+
+            return StatusCode(StatusCodes.Status204NoContent);
         }
     }
 }
