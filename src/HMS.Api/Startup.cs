@@ -40,25 +40,14 @@ namespace HMS.Api
                 .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<RoomTypePostDtoValidator>());
 
             //dotnet ef --startup-project ../HMS.Api migrations add InitialMigration
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
-            });
+            services.AddDatabaseConnectionService(Configuration, "DefaultConnection");
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IRoomTypeService, RoomTypeService>();
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "HMS.Api", Version = "v1" });
-            });
+            services.AddSwaggerServiceExtension();
 
-            var mapConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new AutoMapperProfile());
-            });
-            IMapper mapper = mapConfig.CreateMapper();
-            services.AddSingleton(mapper);
+            services.AddMapperService();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
