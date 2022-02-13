@@ -26,7 +26,7 @@ namespace HMS.Service.Services.Implementations
 
         public async Task CreateAsync(RoomTypePostDto roomTypeDto)
         {
-            if (await _unitOfWork.RoomTypeRepository.IsExistsAsync(x => x.Name.ToLower() == roomTypeDto.Name.ToLower()))
+            if (await _unitOfWork.RoomTypeRepository.IsExistsAsync(x => !x.IsDeleted && x.Name.ToLower() == roomTypeDto.Name.ToLower()))
                 throw new RecordAlredyExistException($"Item already exist with name {roomTypeDto.Name}");
 
             RoomType roomType = _mapper.Map<RoomType>(roomTypeDto);
