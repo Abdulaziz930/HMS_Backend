@@ -26,7 +26,7 @@ namespace HMS.Service.Services.Implementations
 
         public async Task CreateAsync(RoomTypePostDto roomTypeDto)
         {
-            if (await _unitOfWork.RoomTypeRepository.IsExistsAsync(x => x.Name.ToLower() == roomTypeDto.Name.ToLower()))
+            if (await _unitOfWork.RoomTypeRepository.IsExistsAsync(x => !x.IsDeleted && x.Name.ToLower() == roomTypeDto.Name.ToLower()))
                 throw new RecordAlredyExistException($"Item already exist with name {roomTypeDto.Name}");
 
             RoomType roomType = _mapper.Map<RoomType>(roomTypeDto);
@@ -61,7 +61,7 @@ namespace HMS.Service.Services.Implementations
                 throw new PageIndexFormException($"PageIndex must be greater or equal than 1");
 
             IEnumerable<RoomType> roomTypes = await _unitOfWork.RoomTypeRepository
-                .GetAllPagenatedAsync(page, 5, x => !x.IsDeleted && string.IsNullOrWhiteSpace(search) ? true : x.Name.ToLower().Contains(search));
+                .GetAllPagenatedAsync(page, 5, x => !x.IsDeleted && string.IsNullOrWhiteSpace(search) ? true : (x.Name.ToLower().Contains(search) && !x.IsDeleted));
             int totalCount = await _unitOfWork.RoomTypeRepository
                 .GetTotalCountAsync(x => !x.IsDeleted && string.IsNullOrWhiteSpace(search) ? true : x.Name.ToLower().Contains(search));
 
