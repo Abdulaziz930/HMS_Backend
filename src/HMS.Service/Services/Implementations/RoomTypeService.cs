@@ -46,7 +46,7 @@ namespace HMS.Service.Services.Implementations
             if (roomType is null)
                 throw new ItemNotFoundException($"Item not found by id: {id}");
 
-            if (await _unitOfWork.RoomTypeRepository.IsExistsAsync(x => x.Id != id && x.Name.ToLower() == roomType.Name.ToLower()))
+            if (await _unitOfWork.RoomTypeRepository.IsExistsAsync(x => x.Id != id && !x.IsDeleted && x.Name.ToLower() == roomType.Name.ToLower()))
                 throw new RecordAlredyExistException($"Item already exist with name {roomTypeDto.Name}");
 
             roomType.Name = roomTypeDto.Name;

@@ -1,3 +1,4 @@
+using HMS.Admin.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -23,6 +24,10 @@ namespace HMS.Admin
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddHttpClient();
+
+            Constants.baseUrl = Configuration["Api:BaseUrl"];
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
