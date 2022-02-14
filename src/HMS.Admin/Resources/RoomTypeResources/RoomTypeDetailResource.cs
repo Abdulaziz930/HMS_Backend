@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.Admin.ViewModels
+namespace HMS.Admin.Resources
 {
-    public class RoomTypePostViewModel
+    public class RoomTypeDetailResource
     {
-        [Required]
         public string Name { get; set; }
     }
 }
