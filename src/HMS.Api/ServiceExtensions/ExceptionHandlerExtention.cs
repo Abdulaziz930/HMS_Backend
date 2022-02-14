@@ -28,7 +28,7 @@ namespace HMS.Api.ServiceExtensions
                         message = contextFeature.Error.Message;
 
                         if (contextFeature.Error is ItemNotFoundException)
-                            statusCode = 404;
+                            statusCode = StatusCodes.Status404NotFound;
                         else if (contextFeature.Error is RecordAlredyExistException)
                             statusCode = StatusCodes.Status409Conflict;
                         else if (contextFeature.Error is PageIndexFormException)
@@ -39,6 +39,7 @@ namespace HMS.Api.ServiceExtensions
 
                     var errorJsonStr = JsonConvert.SerializeObject(new ResponeDto { Status = statusCode, Message = message });
                     await context.Response.WriteAsync(errorJsonStr);
+                    await context.Response.CompleteAsync();
                 });
             });
         }

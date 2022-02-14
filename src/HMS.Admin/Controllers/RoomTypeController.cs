@@ -1,5 +1,5 @@
 ﻿using HMS.Admin.Utils;
-using HMS.Admin.ViewModels;
+using HMS.Admin.Resources;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -28,7 +28,7 @@ namespace HMS.Admin.Controllers
 
             if (httpResponse.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                RoomTypeIndexViewModel roomType = JsonConvert.DeserializeObject<RoomTypeIndexViewModel>(responseJsonStr);
+                RoomTypeIndexResource roomType = JsonConvert.DeserializeObject<RoomTypeIndexResource>(responseJsonStr);
                 return View(roomType);
             }
 
@@ -44,7 +44,7 @@ namespace HMS.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(RoomTypePostViewModel roomType)
+        public async Task<IActionResult> Create(RoomTypePostResource roomType)
         {
             if (!ModelState.IsValid)
             {
@@ -60,7 +60,7 @@ namespace HMS.Admin.Controllers
             if (!response.IsSuccessStatusCode)
             {
                 var responseJsonStr = await response.Content.ReadAsStringAsync();
-                ResponseViewModel responseVM = JsonConvert.DeserializeObject<ResponseViewModel>(responseJsonStr);
+                ResponseResource responseVM = JsonConvert.DeserializeObject<ResponseResource>(responseJsonStr);
                 ModelState.AddModelError("Name", responseVM.Message);
                 return View();
             }
@@ -79,7 +79,7 @@ namespace HMS.Admin.Controllers
 
             if (httpResponse.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                RoomTypeDetailViewModel roomType = JsonConvert.DeserializeObject<RoomTypeDetailViewModel>(responseJsonStr);
+                RoomTypeDetailResource roomType = JsonConvert.DeserializeObject<RoomTypeDetailResource>(responseJsonStr);
                 return View(roomType);
             }
 
@@ -88,7 +88,7 @@ namespace HMS.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(int id, RoomTypePostViewModel roomType)
+        public async Task<IActionResult> Update(int id, RoomTypePostResource roomType)
         {
             if (!ModelState.IsValid)
             {
@@ -104,7 +104,7 @@ namespace HMS.Admin.Controllers
             if (!response.IsSuccessStatusCode)
             {
                 var responseJsonStr = await response.Content.ReadAsStringAsync();
-                ResponseViewModel responseVM = JsonConvert.DeserializeObject<ResponseViewModel>(responseJsonStr);
+                ResponseResource responseVM = JsonConvert.DeserializeObject<ResponseResource>(responseJsonStr);
                 ModelState.AddModelError("Name", responseVM.Message);
                 return View();
             }
@@ -123,7 +123,7 @@ namespace HMS.Admin.Controllers
 
             if (httpResponse.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                RoomTypeDetailViewModel roomType = JsonConvert.DeserializeObject<RoomTypeDetailViewModel>(responseJsonStr);
+                RoomTypeDetailResource roomType = JsonConvert.DeserializeObject<RoomTypeDetailResource>(responseJsonStr);
                 return View(roomType);
             }
 
@@ -154,7 +154,7 @@ namespace HMS.Admin.Controllers
 
             if (httpResponse.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                RoomTypeDetailViewModel roomType = JsonConvert.DeserializeObject<RoomTypeDetailViewModel>(responseJsonStr);
+                RoomTypeDetailResource roomType = JsonConvert.DeserializeObject<RoomTypeDetailResource>(responseJsonStr);
                 return View(roomType);
             }
 
