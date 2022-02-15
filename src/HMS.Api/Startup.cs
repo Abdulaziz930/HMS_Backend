@@ -43,7 +43,7 @@ namespace HMS.Api
             services.AddDatabaseConnectionService(Configuration, "DefaultConnection");
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IRoomTypeService, RoomTypeService>();
+            services.RegisterAllTypes(ServiceLifetime.Scoped, typeof(IRoomTypeService));
 
             services.AddSwaggerServiceExtension();
 
