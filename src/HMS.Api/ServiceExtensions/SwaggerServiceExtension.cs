@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace HMS.Api.ServiceExtensions
 {
@@ -14,6 +15,7 @@ namespace HMS.Api.ServiceExtensions
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "HMS.Api", Version = "v1" });
+                c.AddFluentValidationRulesScoped();
             });
         }
     }
