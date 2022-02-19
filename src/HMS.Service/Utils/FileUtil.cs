@@ -43,5 +43,24 @@ namespace HMS.Service.Utils
                 Console.WriteLine("Exception was thrown: {0}", ex);
             }
         }
+
+        public static async Task FireBaseDeleteFileAsync(string fileName, FileType fileType)
+        {
+            var auth = new FirebaseAuthProvider(new FirebaseConfig(Constants.FireBaseApiKey));
+            var a = await auth.SignInWithEmailAndPasswordAsync(Constants.FireBaseAuthEmail, Constants.FireBaseAuthPassword);
+
+            var cancellation = new CancellationTokenSource();
+
+            var task = new FirebaseStorage(
+                Constants.FireBaseBucket,
+                new FirebaseStorageOptions
+                {
+                    AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
+                    ThrowOnCancel = true
+                })
+                .Child(fileType == FileType.Image ? "Images" : "Videos")
+                .Child(fileName)
+                .DeleteAsync();
+        }
     }
 }
