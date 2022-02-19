@@ -22,6 +22,7 @@ namespace HMS.Data
         public DbSet<RoomImage> RoomImages { get; set; }
         public DbSet<RoomAmenty> RoomAmenties { get; set; }
         public DbSet<RoomService> RoomServices { get; set; }
+        public DbSet<Setting> Settings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
