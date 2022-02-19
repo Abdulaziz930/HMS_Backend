@@ -48,6 +48,8 @@ namespace HMS.Api
             services.AddSwaggerServiceExtension();
 
             services.AddMapperService();
+
+            ConstantsHandler.RegisterAllConstants(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
