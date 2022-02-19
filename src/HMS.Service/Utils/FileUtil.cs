@@ -62,5 +62,26 @@ namespace HMS.Service.Utils
                 .Child(fileName)
                 .DeleteAsync();
         }
+
+        public static async Task<string> FireBaseGetFileAsync(string fileName, FileType fileType)
+        {
+            var auth = new FirebaseAuthProvider(new FirebaseConfig(Constants.FireBaseApiKey));
+            var a = await auth.SignInWithEmailAndPasswordAsync(Constants.FireBaseAuthEmail, Constants.FireBaseAuthPassword);
+
+            var cancellation = new CancellationTokenSource();
+
+            var task = new FirebaseStorage(
+                Constants.FireBaseBucket,
+                new FirebaseStorageOptions
+                {
+                    AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
+                    ThrowOnCancel = true
+                })
+                .Child(fileType == FileType.Image ? "Images" : "Videos")
+                .Child(fileName)
+                .GetDownloadUrlAsync();
+
+            return await task;
+        }
     }
 }
