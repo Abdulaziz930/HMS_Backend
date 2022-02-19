@@ -13,6 +13,7 @@ namespace HMS.Core
         public IServiceRepository ServiceRepository { get; }
         public IRoomTypeRepository RoomTypeRepository { get; }
         public IRoomRepository RoomRepository { get; }
+        public ISettingRepository SettingRepository { get; }
 
         Task<int> CommitAsync();
     }

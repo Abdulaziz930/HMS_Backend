@@ -16,6 +16,7 @@ namespace HMS.Data
         private IServiceRepository _serviceRepository;
         private IRoomTypeRepository _roomTypeRepository;
         private IRoomRepository _roomRepository;
+        private ISettingRepository _settingRepository;
 
         public UnitOfWork(AppDbContext context)
         {
@@ -26,6 +27,7 @@ namespace HMS.Data
         public IServiceRepository ServiceRepository => _serviceRepository = _serviceRepository ?? new ServiceRepository(_context);
         public IRoomTypeRepository RoomTypeRepository => _roomTypeRepository = _roomTypeRepository ?? new RoomTypeRepository(_context);
         public IRoomRepository RoomRepository => _roomRepository = _roomRepository ?? new RoomRepository(_context);
+        public ISettingRepository SettingRepository => _settingRepository = _settingRepository ?? new SettingRepository(_context);
 
         public async Task<int> CommitAsync()
         {
