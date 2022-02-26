@@ -17,4 +17,9 @@
     <ProjectReference Include="..\HMS.Service\HMS.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Uploads\Images\" />
+    <Folder Include="wwwroot\Uploads\Videos\" />
+  </ItemGroup>
+
 </Project>
