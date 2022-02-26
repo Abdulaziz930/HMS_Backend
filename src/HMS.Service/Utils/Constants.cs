@@ -12,5 +12,8 @@ namespace HMS.Service.Utils
         public static string FireBaseBucket = "";
         public static string FireBaseAuthEmail = "";
         public static string FireBaseAuthPassword = "";
+
+        public static string ImageFolderPath = "";
+        public static string VideoFolderPath = "";
     }
 }

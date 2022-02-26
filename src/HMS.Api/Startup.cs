@@ -26,12 +26,14 @@ namespace HMS.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            _environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+        private readonly IWebHostEnvironment _environment;
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -49,7 +51,7 @@ namespace HMS.Api
 
             services.AddMapperService();
 
-            ConstantsHandler.RegisterAllConstants(Configuration);
+            ConstantsHandler.RegisterAllConstants(Configuration, _environment);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
