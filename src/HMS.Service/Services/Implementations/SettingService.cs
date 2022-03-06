@@ -1,8 +1,10 @@
 ﻿using HMS.Core;
 using HMS.Core.Entities;
 using HMS.Service.DTOs.SettingDtos;
+using HMS.Service.Enums;
 using HMS.Service.Exceptions;
 using HMS.Service.Services.Interfaces;
+using HMS.Service.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +28,24 @@ namespace HMS.Service.Services.Implementations
             if (setting is null)
                 throw new ItemNotFoundException($"Item not found by id: {id}");
 
-            setting.Value = settingDto.Value;
+            if (settingDto.File != null)
+            {
+                if (settingDto.FileType == FileType.Image && !settingDto.File.IsImage())
+                    throw new FileFormatException("File type must be image");
+
+                if (settingDto.FileType == FileType.Image && settingDto.File.IsSizeAllowed(3000))
+                    throw new FileSizeException("The size of the image you uploaded can't be higher 3 MB.");
+
+                if (settingDto.FileType == FileType.Video && !settingDto.File.IsVideo())
+                    throw new FileFormatException("File type must be video");
+
+                var fileName = await FileUtil.UpdateFileAsync(setting.Value, Constants.ImageFolderPath, settingDto.File, settingDto.FileType);
+                setting.Value = fileName;
+            }
+            else
+            {
+                setting.Value = settingDto.Value;
+            }
 
             await _unitOfWork.CommitAsync();
         }
