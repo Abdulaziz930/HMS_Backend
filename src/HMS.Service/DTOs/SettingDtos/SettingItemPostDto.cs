@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using HMS.Service.Enums;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,9 @@ namespace HMS.Service.DTOs.SettingDtos
     {
         public string Value { get; set; }
 
-        public IFormFile Photo { get; set; }
+        public IFormFile File { get; set; }
+
+        public FileType FileType { get; set; }
     }
 
     public class SettingItemPostDtoValidator : AbstractValidator<SettingItemPostDto>
